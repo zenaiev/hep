@@ -29,6 +29,14 @@
 \usepackage{minted}
 \usepackage{scalerel}
 
+\hypersetup{
+	colorlinks=true,
+	linktoc=page,
+	citecolor=Blue,
+	linkcolor=Blue,
+	urlcolor=Blue 
+}
+
 \setlength{\fboxsep}{0pt}%
 \setlength{\fboxrule}{1pt}%
 
@@ -226,8 +234,8 @@ TH1.Print Name  = hist, Entries= 1, Total sum= 1
 	\begin{itemize}
 		\item PyROOT: Python інтерфейс до ROOT
 		\begin{itemize}
-			\item дуже зручний для прототипування (дослідницький код)
-			\item багато корисних Python модулів (numpy, pandas, matplotlib \dots) + документація і дуже велика спільнота
+			\item дуже зручний для прототипування (дослідницький код: швидкість розробки, внесення змін)
+			\item багато корисних Python модулів (numpy, scipy, pandas, matplotlib \dots) + документація і дуже велика спільнота
 		\end{itemize}
 	\end{itemize}
 \rule{\textwidth}{1pt}
@@ -263,7 +271,7 @@ TH1.Print Name  = hist, Entries= 1, Total sum= 1
 
 \begin{frame}
 	\frametitle{Реконструкція інваріантної \newline маси (системи) частинок}
-	\begin{minipage}{0.4\textwidth}
+	\begin{columns}\column{\dimexpr\paperwidth-10pt}	\begin{minipage}{0.4\textwidth}
 	\begin{itemize}
 	\item Реконструкція інваріантної маси -- важлива складова аналізу даних експериментів у HEP
 	\begin{itemize}
@@ -275,13 +283,13 @@ TH1.Print Name  = hist, Entries= 1, Total sum= 1
 	\begin{minipage}{0.59\textwidth}
 
 	\vspace{-0.18\textheight}
-	\hspace*{0.0\textwidth}{\vstretch{.78}{\includegraphics[width=1.1\textwidth]{pics/cms.png}}}
+	\hspace*{0.0\textwidth}{\vstretch{.74}{\includegraphics[width=1.1\textwidth]{pics/cms.png}}}
 	\end{minipage}
 		
-	\vspace{0.025\textheight}
+	\vspace{-0.01\textheight}
 	\begin{itemize}
 		\item Інваріантна маса
-		$M = E^2-P^2 = (E_1+E_2)^2-(P_1+P_2)^2$ 
+		$M = \sqrt{E^2-P^2} = \sqrt{(E_1+E_2)^2-(P_1+P_2)^2}$ 
 		не змінюється при перетворенні системи відліку
 		\item Експериментальні дані складаються з числених \underline{подій} (одне зіткнення частинок)
 		\item Дані про кожну \underline{подію} містять енергії та/чи імпульси зареєстрованих детектором (стабільних чи довгоживучих) частинок
@@ -291,11 +299,12 @@ TH1.Print Name  = hist, Entries= 1, Total sum= 1
 			\item система ідентифікації частинок (Particle Identification, PID)cвизначає тип частинки (маса)
 			\item[] $\to$ це дозволяє \emph{реконструювати} (тобто обчислити енергію та імпульс) батьківської нестабільної частинки, яку хочемо досліджувати і яка не може бути зареєстрована детектором
 		\end{itemize}
-		\item Аналіз даних потребує фільтрацію шуму, корекцію детекторних ефектів тощо
+		\item Аналіз даних потребує фільтрацію шуму (фон), корекцію детекторних ефектів тощо
 		\begin{itemize}
 			\item зазвичай народжується багато нестабільних частинок $\to$ десятки, сотні чи навіть тисячі треків у кожній події $\to$ тисячі чи мільони \underline{комбінацій} (комбінаторний фон)
 		\end{itemize}
 	\end{itemize}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -324,24 +333,31 @@ TH1.Print Name  = hist, Entries= 1, Total sum= 1
 		\item $D^{+}$ складається з $c\bar{d}$ кварків
 		\item $M(D^{+}) = 1869.66 \pm 0.05$ ГеВ [Particle Data Group (PDG) \url{https://pdg.lbl.gov/}]
 		\item $\tau(D^{+}) = (1.033 \pm 0.005) \times 10^{-12}$ с: розпадається за рахунок слабкої взаємодії
-		\item Маючи імпульс $\sim$ ГеВ, пролітає $L = \frac{p}{M} c \tau \sim$ декілька мм $\to$ його точка розпаду (вершина) може бути реконструйована $\to$ це дозволяє суттєво зменшити комбінаторний фон
+		\item Маючи імпульс $\sim$ ГеВ, $D^+$ мезон пролітає $L = \frac{p}{M} c \tau \sim$ декілька мм $\to$ його точка розпаду (вершина) може бути реконструйована $\to$ це дозволяє суттєво зменшити комбінаторний фон
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Практичне заняття}
-	\url{https://github.com/zenaiev/hep/invmass/invmass.py}
 	
-	\vspace{0.05\textheight}
+	%\vspace{0.05\textheight}
 	\begin{itemize}
-		\item Згенерувати $N$ подій
+		\item Згенерувати $N=1000$ подій
 		\item У кожній події згенерувати дві частинки: $K^0$ і $D^0$ мезони
-		\item Згенерувати розпади $K^0 \to \pi^{+}\pi^{-}$, $D^0 \to K^{-}\pi^{+}$
+		\item Згенерувати розпади $K^0 \to \pi^{+}\pi^{-}$, $D^0 \to \pi^{+}\pi^{-}$
+		\item Накласти ефект роздільної здатності детектора
 		\item Реконструювати інваріанту масу кожної пари дочірних частинок
-		\item Зафітувати (fit: апроксимація, регресія) спектр інваріантної маси, визначити маси і кількість  реконструйованих частинок
+		\item Зафітувати (fit: апроксимація, регресія) розподіл інваріантної маси, визначити маси і кількість  реконструйованих частинок
 		\item Намалювати графік інваріантної маси
-		\item Зберегти згенеровані дані в ROOT файл і зчитати дані із нього
+		\item Зберегти згенеровані дані в ROOT файл і зчитати їх із нього
+		\item (Домашнє) завдання: переписати код для виконання завдання на С++
 	\end{itemize}
+
+\vspace{0.05\textheight}
+Github:\newline \url{https://github.com/zenaiev/hep/blob/main/invmass/invmass.py}
+
+\vspace{0.05\textheight}
+Google Colab:\newline \url{https://colab.research.google.com/github/zenaiev/hep/blob/main/invmass/invmass.ipynb}
 \end{frame}
 
 %\appendix
