@@ -12,7 +12,7 @@
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/intro)
   - 12.09.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/invmass/invmass.pdf)
-     - [коди](https://github.com/zenaiev/hep/tree/main/invmass/invmass)
+     - [коди](https://github.com/zenaiev/hep/tree/main/invmass)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass.py)
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass.ipynb)
 
