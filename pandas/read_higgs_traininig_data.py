@@ -1,5 +1,5 @@
 # Based on https://www.kaggle.com/code/sugataghosh/higgs-boson-event-detection-part-1-eda
-
+# Data to be retrieved from https://www.kaggle.com/competitions/higgs-boson/data?select=training.zip
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
