@@ -10,7 +10,7 @@
   Додакткові матеріали:  
   - 06.09.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/intro)
-  13.09.2024
+  - 13.09.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/invmass/invmass.pdf)
      - [коди](https://github.com/zenaiev/hep/tree/main/invmass/invmass)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass.py)
