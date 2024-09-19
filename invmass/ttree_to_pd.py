@@ -5,18 +5,18 @@ import pandas as pd
 file = ROOT.TFile("tracks.root")
 
 # Access the TTree
-tree = file["tree"]  # Replace 'myTree' with your actual TTree name
+tree = file["tree"]
 
 # Create lists to store TLorentzVector components
 px_list, py_list, pz_list, m_list = [], [], [], []
 
-# Loop through the events and extract Lorentz vectors
+# Loop through the events and extract Lorentz vectors, print first 5 events
 i = 0
 for event in tree:
     i += 1
     if(i<=5): print(f'i = {i}')
     px, py, pz, m = [], [], [], []
-    for vec in event.tracks:  # vec is a TLorentzVector
+    for vec in event.tracks:
         if(i<=5): print(vec)
         px.append(vec.Px())
         py.append(vec.Py())
@@ -37,5 +37,5 @@ df = pd.DataFrame({
     'M': m_list
 })
 
-# Inspect the DataFrame
+# Inspect the DataFrame (first 5 entries)
 print(df.head())
