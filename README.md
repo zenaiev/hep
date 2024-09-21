@@ -15,6 +15,9 @@
      - [коди](https://github.com/zenaiev/hep/tree/main/invmass/invmass)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass.py)
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass.ipynb)
+   - 21.09.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/pandas/pandas_bakalavr.pdf)
+     - [коди](https://github.com/zenaiev/hep/tree/main/pandas)
 
  <!--</details>-->
 
