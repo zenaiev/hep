@@ -4,6 +4,7 @@ import random
 import tqdm
 import sys
 import argparse
+from matplotlib import pyplot as plt
 
 def generate_and_decay(particle):
   # Input parameters
@@ -145,18 +146,34 @@ def study_momenta():
   hmom_dzero.GetYaxis().SetTitle('Arbitrary units')
   hmom_dzero.GetYaxis().SetTitleOffset(1.5)
   canvas = ROOT.TCanvas("canvas", "Particle momenta", 600, 600)
+  hmom_dzero.SetMaximum(1.1 * max(h.GetMaximum() for h in [hmom_dzero, hmom_kzero, hmom_pich]))
   hmom_dzero.Draw('hist')
   hmom_kzero.Draw('hist same')
   hmom_pich.Draw('hist same')
-  # Legend
   legend = ROOT.TLegend(0.5,0.75,0.75,0.9)
   legend.AddEntry(hmom_dzero, "D0", "l")
   legend.AddEntry(hmom_kzero, "K0", "l")
   legend.AddEntry(hmom_pich, "pi+,pi-", "l")
   legend.Draw()
-  # Save the histogram as an image
   canvas.SaveAs("momenta.pdf")
   canvas.SaveAs("momenta.png")
+  # Draw results using matplotlib (plt)
+  fig,ax = plt.subplots()
+  x = [hmom_dzero.GetBinLowEdge(b+1) for b in range(hmom_dzero.GetNbinsX()+1)]
+  toplots = [[hmom_dzero, 'D0'], [hmom_kzero, 'K0'], [hmom_pich, 'pi+,pi-']]
+  for toplot in toplots:
+    h,label = toplot
+    y = [h.GetBinContent(b+1) for b in range(h.GetNbinsX())]
+    y = y + [y[-1]]
+    ax.step(x, y, where='post', label=label)
+  ax.set_xlim(hmom_dzero.GetBinLowEdge(1), hmom_dzero.GetBinLowEdge(hmom_dzero.GetNbinsX()+1))
+  ax.set_ylim(bottom=0)
+  ax.set_xlabel('p [GeV]')
+  ax.set_ylabel('Arbitrary units')
+  ax.legend()
+  #plt.show()
+  fig.savefig('momenta_plt.pdf')
+  fig.savefig('momenta_plt.png')
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
