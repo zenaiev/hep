@@ -25,7 +25,8 @@ def generate_and_decay(parent_mass, daughter_mass_1, daughter_mass_2):
     print(f'parent: {parent}, m = {parent.M()}')
     print(f'daughter1: {daughter1}, m = {daughter1.M()}')
     print(f'daughter2: {daughter2}, m = {daughter2.M()}')
-    #sys.exit(0)
+    a
+    sys.exit(0)
 
   # Smear momentum of daughter tracks
   daughter1 = smear_momentum(daughter1)
@@ -52,7 +53,7 @@ def two_body_decay(parent, m1, m2):
   # In the rest frame, the daughters have equal momenta (p12)
   p12 = math.sqrt((m0**2 - (m1 + m2)**2) * (m0**2 - (m1 - m2)**2)) / (2 * m0)
   E1 = (m0**2 + m1**2 - m2**2) / (2 * m0)
-  E2 = (m0**2 + m2**2 - m1**2) / (2 * m0)
+  #E2 = (m0**2 + m2**2 - m1**2) / (2 * m0)
 
   # Momentum of the daughters in the rest frame
   p = math.sqrt(E1**2 - m1**2)
@@ -83,8 +84,8 @@ def two_body_decay(parent, m1, m2):
 if __name__ == '__main__':
   if 1:
     # Set the number of particles to generate
-    nParticles = 100000
-    #nParticles = 10
+    nParticles = 1000
+    #nParticles = 1
 
     # Particle masses in GeV [https://pdg.lbl.gov/]
     mass_pi_ch = 0.13957
@@ -97,11 +98,12 @@ if __name__ == '__main__':
     # Create a histogram to store generated momenta
     hInvMass = ROOT.TH1F("hInvMass", "Invariant Mass", 300, 0, 3)
 
-    # Create tree (store events)
-    fileout = ROOT.TFile("tracks.root", "recreate")
-    tree = ROOT.TTree('tree', 'Tree with tracks')
-    tracks_vec = ROOT.std.vector(ROOT.Math.PxPyPzMVector)()
-    branch = tree.Branch('tracks', tracks_vec)
+    if 1:
+      # Create tree (store events)
+      fileout = ROOT.TFile("tracks.root", "recreate")
+      tree = ROOT.TTree('tree', 'Tree with tracks')
+      tracks_vec = ROOT.std.vector(ROOT.Math.PxPyPzMVector)()
+      branch = tree.Branch('tracks', tracks_vec)
 
     # Loop over particles and generate random kinematics
     #for i in range(nParticles):
@@ -111,17 +113,18 @@ if __name__ == '__main__':
       tracks += generate_and_decay(mass_d_zero, mass_pi_ch, mass_pi_ch)
       assert len(tracks) == 4
 
-      tracks_vec.clear()
-      for tr in tracks:
-        tracks_vec.push_back(tr)
-      tree.Fill()
-
       for itr1 in range(len(tracks)):
         for itr2 in range(itr1 + 1, len(tracks)):
           hInvMass.Fill((tracks[itr1] + tracks[itr2]).M())
 
+      if 1:
+        tracks_vec.clear()
+        for tr in tracks:
+          tracks_vec.push_back(tr)
+        tree.Fill()
+
     # Write TTree to file
-    if 0:
+    if 1:
       fileout.cd()
       tree.Write()
       fileout.Close()
@@ -163,6 +166,8 @@ if __name__ == '__main__':
 
   # Create a canvas to draw the histogram
   canvas = ROOT.TCanvas("canvas", "Invariant Mass", 600, 600)
+  hInvMass.GetXaxis().SetTitle('M(\\pi^{+}\\pi^{-}) [GeV]')
+  hInvMass.GetYaxis().SetTitle('Events')
   hInvMass.Draw()
 
   # Save the histogram as an image
