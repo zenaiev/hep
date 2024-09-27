@@ -18,6 +18,10 @@
    - 21.09.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/pandas/pandas_bakalavr.pdf)
      - [коди](https://github.com/zenaiev/hep/tree/main/pandas)
+   - 27.09.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/cuts_xsec/cuts_xsec.pdf)
+     - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
+     - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
 
  <!--</details>-->
 
