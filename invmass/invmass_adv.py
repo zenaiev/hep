@@ -5,6 +5,7 @@ import tqdm
 import sys
 import argparse
 from matplotlib import pyplot as plt
+import numpy as np
 
 def generate_and_decay(particle):
   # Input parameters
@@ -13,10 +14,11 @@ def generate_and_decay(particle):
   # currently we support only stable particles or two-body decays
   assert len(daughter_masses) in [0, 2]
   # lambda parameter of exponential distribution (can be different for different particles)
-  if len(particle) > 2:
-    exp_lambda = particle[2]
-  else:
-    exp_lambda = 1.0
+  exp_lambda = 1.
+  #if parent_mass > 1.:
+  #  exp_lambda = 0.5
+  # momentum ~ mass ~ 1/lambda
+  #exp_lambda = 1. / parent_mass
 
   # Generate random values for momentum and direction
   momentum = random.expovariate(exp_lambda)  # Exponential distribution for momentum
@@ -97,11 +99,13 @@ def two_body_decay(parent, m1, m2):
 
 # particles is a list of [m_parent, m_daughters]
 # m_daughters is a list of daughets (if empty, no decay)
-def generate_events(nevents, particles=[], hInvMass=None, tree=None, tracks_vec_for_ttree=None, pmin=None):
+def generate_events(nevents, particles=[], hInvMass=None, tree=None, tracks_vec_for_ttree=None, pmin=0., notqdm=False):
   tracks_all = []
   # Loop over particles and generate random kinematics
-  #for i in range(nParticles):
-  for i in tqdm.tqdm(range(nevents)):
+  iterate_over = range(nevents)
+  if not notqdm:
+    iterate_over = tqdm.tqdm(range(nevents))
+  for i in iterate_over:
     tracks = []
     for particle in particles:
       tracks += generate_and_decay(particle)
@@ -117,7 +121,7 @@ def generate_events(nevents, particles=[], hInvMass=None, tree=None, tracks_vec_
       # Fill the invariant mass histogram
       for itr1 in range(len(tracks)):
         for itr2 in range(itr1 + 1, len(tracks)):
-          if pmin is None or all(tr.P() >= pmin for tr in [tracks[itr1], tracks[itr2]]):
+          if pmin == 0. or all(tr.P() >= pmin for tr in [tracks[itr1], tracks[itr2]]):
             hInvMass.Fill((tracks[itr1] + tracks[itr2]).M())
 
   # Return all tracks
@@ -171,16 +175,133 @@ def study_momenta():
   ax.set_xlabel('p [GeV]')
   ax.set_ylabel('Arbitrary units')
   ax.legend()
-  #plt.show()
+  #plt.show() # display immediately
   fig.savefig('momenta_plt.pdf')
   fig.savefig('momenta_plt.png')
 
+def fit(hInvMass, fname='invmass_adv'):
+  # Fit
+  fitFunc = ROOT.TF1("fitFunc", 
+                     "[0]/(sqrt(2*TMath::Pi())*[2])*TMath::Exp(-0.5*((x-[1])/[2])^2)"   # First Gaussian
+                     " + [3]/(sqrt(2*TMath::Pi())*[5])*TMath::Exp(-0.5*((x-[4])/[5])^2)" # Second Gaussian
+                     " + (x - 0.13957*2) * exp([6] + [7]*x + [8]*x^2 + [9]*x^3)", # step function x exp(5th degree polynomial)
+                          0.13957*2, 10)
+  fitFunc.SetParameters(1, 0.5, 0.01,  # Amplitude, mean, sigma of first Gaussian
+                        1, 1.85, 0.05,  # Amplitude, mean, sigma of second Gaussian
+                        0, 0, 0, 0, 0);    # Coefficients of the polynomial (0 by default anyway)
+  fitFunc.SetNpx(10000)
+  fitFunc.SetParLimits(0, 0., 1e6) # K0 integral
+  fitFunc.SetParLimits(1, 0.48, 0.52) # K0 mass
+  fitFunc.SetParLimits(2, 0., 0.05) # K0 width
+  fitFunc.SetParLimits(3, 0., 1e6) # D0 integral
+  fitFunc.SetParLimits(4, 1.8, 1.9) # D0 mass
+  fitFunc.SetParLimits(5, 0., 0.2) # D0 width
+  #fitFunc.FixParameter(0, 0.)
+  #fitFunc.FixParameter(1, 0.)
+  #fitFunc.FixParameter(2, 1.)
+  hInvMass.Fit(fitFunc)
+  bin_width = hInvMass.GetBinLowEdge(2) - hInvMass.GetBinLowEdge(1)
+  print(f'Number of signal events #1 = {fitFunc.GetParameter(0)/bin_width} +- {fitFunc.GetParError(0)/bin_width}')
+  print(f'Number of signal events #2 = {fitFunc.GetParameter(3)/bin_width} +- {fitFunc.GetParError(3)/bin_width}')
+
+  if fname is not None:
+    # Create a canvas to draw the histogram
+    canvas = ROOT.TCanvas("canvas", "Invariant Mass", 600, 600)
+    hInvMass.Draw()
+    # Save the histogram as an image
+    canvas.SaveAs(f"{fname}.pdf")
+    canvas.SaveAs(f"{fname}.png")
+
+  # test if we get the expected result
+  #print(fitFunc.GetParameter(0))
+  #assert fitFunc.GetParameter(0) == 9.940388645786218 # this might be machine dependent: consider to lower precision
+
+  # return signal significance
+  return fitFunc.GetParameter(3) / fitFunc.GetParError(3)
+
+def read_tree(pmin):
+  # Read data from TTree
+  filein = ROOT.TFile("tracks_adv.root")
+  tree = filein.Get('tree')
+  tracks = ROOT.std.vector(ROOT.Math.PxPyPzMVector)()
+  tree.SetBranchAddress('tracks', tracks)
+  hInvMass = ROOT.TH1F("hInvMass", "Invariant Mass", 300, 0, 3)
+  for ientr in range(tree.GetEntries()):
+    tree.GetEntry(ientr)
+    for itr1 in range(len(tracks)):
+      for itr2 in range(itr1 + 1, len(tracks)):
+        if pmin == 0. or all(tr.P() >= pmin for tr in [tracks[itr1], tracks[itr2]]):
+          hInvMass.Fill((tracks[itr1] + tracks[itr2]).M())
+  significance = fit(hInvMass)
+  return hInvMass.GetEntries(), significance
+
+def varycut():
+  #pmins = [0., 0.7, 1.5]
+  pmins = np.arange(0., 1.51, 0.1)
+  significance = []
+  efficiency_signal = []
+  efficiency_background = []
+  purity_signal = []
+  for pmin in tqdm.tqdm(pmins):
+    # signal efficiency
+    nevents = 1000
+    hInvMass = ROOT.TH1F("hInvMass", "Invariant Mass", 300, 0, 3)
+    generate_events(nevents, [[mass_d_zero, [mass_pi_ch]*2]], hInvMass, None, None, pmin, notqdm=True)
+    nevents_sel_signal = hInvMass.GetEntries()
+    efficiency_signal.append(nevents_sel_signal / nevents)
+    # signal significance
+    nevents_sel_all, significance_this = read_tree(pmin)
+    significance.append(significance_this)
+    # background efficiency: number of all events minus signal events 
+    # (make sure that there is the same number of total events in the
+    # tree we are reading and when calculating signal efficiency above)
+    nevents_sel_background = nevents_sel_all - nevents_sel_signal
+    # the total number of background events is when pmin = 0print
+    # (make sure pmin = 0 is the first iteration)
+    if pmin == 0:
+      nevents_total_background = nevents_sel_background
+    efficiency_background.append(nevents_sel_background / nevents_total_background)
+    # signal purity
+    purity_signal.append(nevents_sel_signal / nevents_sel_all)
+  fig, ax = plt.subplots()
+  ax.plot(pmins, efficiency_signal, color='b', label='Signal efficiency')
+  ax.plot(pmins, efficiency_background, color='r', label='Background efficiency')
+  ax.plot(pmins, purity_signal, color='b', linestyle='--', label='Signal purity')
+  ax.set_xlim(pmins[0], pmins[-1])
+  ax.set_ylim(0., 1.25*ax.get_ylim()[1])
+  ax.set_xlabel('$p_{min}$ [GeV]')
+  ax.set_ylabel('Efficiency, purity')
+  ax.axhline(y=1, color='gray')
+  ax.legend(loc='upper left')
+  # Second axis to plot significance (on the right)
+  ax2 = ax.twinx()
+  ax2.plot(pmins, significance, color='g', label='Significance')
+  ax2.set_ylim(0., ax.get_ylim()[1]*max(significance))
+  ax2.set_ylabel('Significance')
+  ax2.tick_params(axis='y', colors='g')
+  ax2.yaxis.label.set_color('g')
+  ax2.legend(loc='upper right')
+  #plt.show() # display immediately
+  fig.savefig('varycut.pdf')
+  fig.savefig('varycut.png')
+
+###########################
+# To run all analysis:
+# python invmass_adv.py -t # generate events, reconstruct invariant mass, store plots in invmass_adv.*, write TTree in tracks_adv.root
+# python invmass_adv.py -r # the same but reading tree from tracks_adv.root
+# python invmass_adv.py -m # compare momenta of different particles, store plot momenta.* (ROOT plot) and momenta_plt.* (matplotlib plot)
+# python invmass_adv.py -p 1.0 # generate events and reconstruct invariant mass applying cut p > 0.7 GeV (plots in invmass_adv.*)
+# python invmass_adv.py -e -p 1.0 # calculate signal efficiency for p > 0.7 GeV
+# python invmass_adv.py --varycut # vary p cut, store plots in varycut.*
+###########################
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('-t', '--tree', action='store_true', help='store TTree')
   parser.add_argument('-r', '--readtree', action='store_true', help='read TTree')
   parser.add_argument('-m', '--momenta', action='store_true', help='study momenta')
   parser.add_argument('-e', '--efficiency', action='store_true', help='calculate efficiency for D0')
+  parser.add_argument('-p', '--pmin', type=float, default=0.0, help='cut on particle momentum in GeV')
+  parser.add_argument('--varycut', action='store_true', help='vary pmin cut')
   args = parser.parse_args()
 
   # Particle masses in GeV [https://pdg.lbl.gov/]
@@ -188,10 +309,6 @@ if __name__ == '__main__':
   mass_k_zero = 0.497611
   mass_d_zero = 1.86484
   mass_b_zero = 5.27972
-
-  # Cut on particle momentum in GeV
-  #pmin = None
-  pmin = 0.7
 
   # random seed for reproducible results
   random.seed(42)
@@ -207,86 +324,52 @@ if __name__ == '__main__':
 
   # Calculate efficiency for D0
   if args.efficiency:
-    nevents = 10000
-    generate_events(10000, [[mass_d_zero, [mass_pi_ch]*2]], hInvMass, None, None, pmin)
+    nevents = 1000
+    generate_events(nevents, [[mass_d_zero, [mass_pi_ch]*2]], hInvMass, None, None, args.pmin)
     nevents_sel = hInvMass.GetEntries()
     efficiency = nevents_sel / nevents
-    print(f'efficiency(D0, pmin = {pmin}) = {efficiency:.3f}')
+    print(f'efficiency(D0, pmin = {args.pmin}) = {efficiency:.3f}')
+    sys.exit(0)
+    
+  if args.readtree:
+    # Read data from TTree
+    read_tree(args.pmin)
     sys.exit(0)
 
-  if not args.readtree:
-    # Set the number of events to generate
-    nevents = 1000
+  # Analyse cut variation
+  if args.varycut:
+    varycut()
+    sys.exit(0)
 
-    # Particles to generate in each event
-    particles = [
-      [mass_k_zero, [mass_pi_ch]*2], # K0 -> pi+ pi-
-      [mass_d_zero, [mass_pi_ch]*2], # D0 -> pi+ pi-
+  # Set the number of events to generate
+  nevents = 1000
+
+  # Particles to generate in each event
+  particles = [
+    [mass_k_zero, [mass_pi_ch]*2], # K0 -> pi+ pi-
+    [mass_d_zero, [mass_pi_ch]*2], # D0 -> pi+ pi-
 #      [mass_b_zero, [mass_pi_ch]*2], # B0 -> pi+ pi-
-    ]
-    particles += [[mass_pi_ch, []] for i in range(5)] # 5 pi+/pi-
+  ]
+  particles += [[mass_pi_ch, []] for i in range(5)] # 5 pi+/pi-
 
-    if args.tree:
-      # Create tree (store events)
-      fileout = ROOT.TFile("tracks_adv.root", "recreate")
-      tree = ROOT.TTree('tree', 'Tree with tracks')
-      tracks_vec = ROOT.std.vector(ROOT.Math.PxPyPzMVector)()
-      branch = tree.Branch('tracks', tracks_vec)
-    else:
-      tree = None
-      tracks_vec = None
-
-    # Generate events
-    tracks = generate_events(nevents, particles, hInvMass, tree, tracks_vec, pmin)
-
-    # Write TTree to file
-    if args.tree:
-      fileout.cd()
-      tree.Write()
-      fileout.Close()
-
+  if args.tree:
+    # Create tree (store events)
+    fileout = ROOT.TFile("tracks_adv.root", "recreate")
+    tree = ROOT.TTree('tree', 'Tree with tracks')
+    tracks_vec = ROOT.std.vector(ROOT.Math.PxPyPzMVector)()
+    branch = tree.Branch('tracks', tracks_vec)
   else:
-    # Read data from TTree
-    filein = ROOT.TFile("tracks_adv.root")
-    tree = filein.Get('tree')
-    tracks = ROOT.std.vector(ROOT.Math.PxPyPzMVector)()
-    tree.SetBranchAddress('tracks', tracks)
-    for ientr in range(tree.GetEntries()):
-      tree.GetEntry(ientr)
-      for itr1 in range(len(tracks)):
-        for itr2 in range(itr1 + 1, len(tracks)):
-          if pmin is None or all(tr.P() >= pmin for tr in [tracks[itr1], tracks[itr2]]):
-            hInvMass.Fill((tracks[itr1] + tracks[itr2]).M())
+    tree = None
+    tracks_vec = None
+
+  # Generate events
+  tracks = generate_events(nevents, particles, hInvMass, tree, tracks_vec, args.pmin)
+
+  # Write TTree to file
+  if args.tree:
+    fileout.cd()
+    tree.Write()
+    fileout.Close()
 
   # Fit
-  fitFunc = ROOT.TF1("fitFunc", 
-                     "[0]/(sqrt(2*TMath::Pi())*[2])*TMath::Exp(-0.5*((x-[1])/[2])^2)"   # First Gaussian
-                     " + [3]/(sqrt(2*TMath::Pi())*[5])*TMath::Exp(-0.5*((x-[4])/[5])^2)" # Second Gaussian
-                     #" + [6] + [7]*x + [8]*x^2 + [9]*x^3 + [10]*x^4 + [11]*x^5",               # Polynomial (5th degree)
-                     " + (x - 0.13957*2) * exp(pol5(6))", # Exponent of polynomial (5th degree) x (step function)
-            0.13957*2, 10)
-  fitFunc.SetParameters(1, 0.5, 0.01,  # Amplitude, mean, sigma of first Gaussian
-                        1, 1.85, 0.05,  # Amplitude, mean, sigma of second Gaussian
-                        0, 0, 0, 0, 0);    # Coefficients of the polynomial (0 by default anyway)
-  #fitFunc.FixParameter(0, 0.)
-  fitFunc.SetNpx(10000)
-  fitFunc.SetParLimits(1, 0.48, 0.52) # K0 mass
-  fitFunc.SetParLimits(2, 0., 0.02) # K0 width
-  fitFunc.SetParLimits(4, 1.8, 1.9) # D0 mass
-  fitFunc.SetParLimits(5, 0.01, 0.1) # D0 width
-  hInvMass.Fit(fitFunc)
-  bin_width = hInvMass.GetBinLowEdge(2) - hInvMass.GetBinLowEdge(1)
-  print(f'Number of signal events #1 = {fitFunc.GetParameter(0)/bin_width} +- {fitFunc.GetParError(0)/bin_width}')
-  print(f'Number of signal events #2 = {fitFunc.GetParameter(3)/bin_width} +- {fitFunc.GetParError(3)/bin_width}')
-
-  # Create a canvas to draw the histogram
-  canvas = ROOT.TCanvas("canvas", "Invariant Mass", 600, 600)
-  hInvMass.Draw()
-
-  # Save the histogram as an image
-  canvas.SaveAs("invmass_adv.pdf")
-  canvas.SaveAs("invmass_adv.png")
-
-  # test if we get the expected result
-  #print(fitFunc.GetParameter(0))
-  #assert fitFunc.GetParameter(0) == 9.940388645786218 # this might be machine dependent: consider to lower precision
+  fit(hInvMass, 'invmass_adv')
