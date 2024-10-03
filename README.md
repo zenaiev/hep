@@ -20,6 +20,7 @@
      - [коди](https://github.com/zenaiev/hep/tree/main/pandas)
    - 27.09.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/cuts_xsec/cuts_xsec.pdf)
+     - [С++ скрипт (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass.cpp)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
 
@@ -43,6 +44,10 @@ _______________________________
      - [коди](https://github.com/zenaiev/hep/tree/main/pandas)
    - 26.09.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/cuts_xsec/cuts_xsec.pdf)
+     - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
+     - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
+   - 03.10.2024
+     - [С++ скрипт (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass.cpp)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
 <!--</summary>-->
