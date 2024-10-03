@@ -139,7 +139,7 @@
 
 \vspace{-0.05\textheight}
 \begin{itemize}
-	\item Unfolding (розгортання, відновлення, деконволюція) в експериментальній фізиці -- математичний метод відновлення справжнього (істинного) розподілу фізичної величини на основі спостережуваних (виміряних) даних
+	\item Unfolding (розгортання, відновлення, деконволюція) в експериментальній фізиці -- математичний метод відновлення справжнього (істинного, true) розподілу фізичної величини на основі спостережуваних (виміряних, reconstructed, reco) даних
 	\item Unfolding є ключовою проблемою при вимірюванні розподілів (наприклад, диференційних перерізів народження частинок, $\frac{\textrm{d}\sigma}{\textrm{d}X}$), що зазнають суттєвого впливу через обмежену роздільну здатність детектора
 	\item Експериментально вимірюють диференційні перерізи, що усереднені за бінами
 	\begin{eqnarray*}
@@ -175,13 +175,14 @@
 	cd ..
 	source build/setup.sh
 	\end{minted}
-		\item Ми розглянемо метод матричного розгортання, реалізований в \href{https://www.desy.de/~sschmitt/tunfold.html}{TUnfold}
+		\item Ми розглянемо метод матричного розгортання, реалізований в \href{https://www.desy.de/~sschmitt/tunfold.html}{TUnfold}. Він дозволяє використовувати більшу кількість бінів на спостережуваному рівні, ніж на істинному рівні, що допомагає стабілізувати розв'язок.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{TUnfold (опис зі статті \href{https://www.desy.de/~sschmitt/TUnfold/tunfold\_1205.6201v5.pdf}{JINST 7 (2012) T10003 [arXiv:1205.6201] })}
-	\centering{\includegraphics[width=1.0\textwidth]{pics/scr-alg.png}}
+	\centering{\includegraphics[width=0.9\textwidth]{pics/scr-alg.png}}
+	\centering{\includegraphics[width=0.9\textwidth]{pics/scr-alg2.png}}
 \end{frame}
 
 \begin{frame}
