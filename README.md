@@ -23,6 +23,10 @@
      - [С++ скрипт (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass.cpp)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
+   - 04.10.2024
+     - [С++ скрипт (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass.cpp)
+     - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
+     - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
 
  <!--</details>-->
 
