@@ -212,7 +212,7 @@ def fit(hInvMass, fname='invmass_adv'):
     canvas.SaveAs(f"{fname}.pdf")
     canvas.SaveAs(f"{fname}.png")
 
-  # test if we get the expected result
+  # test if we get the expected result  
   #print(fitFunc.GetParameter(0))
   #assert fitFunc.GetParameter(0) == 9.940388645786218 # this might be machine dependent: consider to lower precision
 
@@ -252,17 +252,12 @@ def varycut():
     # signal significance
     nevents_sel_all, significance_this = read_tree(pmin)
     significance.append(significance_this)
-    # background efficiency: number of all events minus signal events 
-    # (make sure that there is the same number of total events in the
-    # tree we are reading and when calculating signal efficiency above)
     nevents_sel_background = nevents_sel_all - nevents_sel_signal
-    # the total number of background events is when pmin = 0print
-    # (make sure pmin = 0 is the first iteration)
-    if pmin == 0:
-      nevents_total_background = nevents_sel_background
-    efficiency_background.append(nevents_sel_background / nevents_total_background)
+    efficiency_background.append(nevents_sel_background)
     # signal purity
     purity_signal.append(nevents_sel_signal / nevents_sel_all)
+  # normalise background efficiency such that it is 1 when pmin=0
+  efficiency_background = [val / efficiency_background[0] for val in efficiency_background]
   fig, ax = plt.subplots()
   ax.plot(pmins, efficiency_signal, color='b', label='Signal efficiency')
   ax.plot(pmins, efficiency_background, color='r', label='Background efficiency')
@@ -303,6 +298,9 @@ if __name__ == '__main__':
   parser.add_argument('-p', '--pmin', type=float, default=0.0, help='cut on particle momentum in GeV')
   parser.add_argument('--varycut', action='store_true', help='vary pmin cut')
   args = parser.parse_args()
+
+  # disable ROOT plots on the screen
+  ROOT.gROOT.SetBatch(True)
 
   # Particle masses in GeV [https://pdg.lbl.gov/]
   mass_pi_ch = 0.13957
