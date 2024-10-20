@@ -27,6 +27,8 @@
      - [С++ скрипт (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass.cpp)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
+   - 11.10.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/pid/HEP_KNU_PID.pdf)
 
  <!--</details>-->
 
@@ -54,6 +56,8 @@ _______________________________
      - [С++ скрипт (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass.cpp)
      - [головний скрипт](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.py)
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
+   - 10.10.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/pid/HEP_KNU_PID.pdf)
    - 17.10.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/combine/combine.pdf)
 <!--</summary>-->
