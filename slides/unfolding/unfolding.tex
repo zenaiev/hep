@@ -180,6 +180,41 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{TUnfold}
+	
+	\begin{columns}
+		\column{0.35\textwidth}
+		\centering{\includegraphics[width=1.00\textwidth]{pics/3unf.png}}
+		\column{0.65\textwidth}
+		\begin{itemize}
+			\item \underline{\bf Unfolding problem:} $\bm{\mu} = \bm{A}\bm{x}$\\
+			
+			%\vspace{0.1cm}
+			\item $\bm{\mu}$: detector expectation ($M_y$ bins), $\bm{V_{yy}}$ is its covariance% (observation and its covariance: $\bm{y}$ and \item \item $\bm{V_{yy}}$), $M_y$ bins\\
+			\item $\bm{A}$: response matrix (taken from MC)\\
+			\item $\bm{x}$: unknown truth, $M_x$ bins ($M_x \le M_y$)\\
+			
+			%\vspace{0.1cm}
+			\item ${\cal L} = (\bm{y}-\bm{A}\bm{x})^T \bm{V_{yy}}^{-1} (\bm{y}-\bm{A}\bm{x}) + \tau^2 (\bm{x}-\bm{x_0})^T(\bm{L}^T\bm{L})(\bm{x}-\bm{x_0})$
+			
+			%\vspace{0.2cm}
+			%\underline{\bf Solution:}
+			\item $\frac{\partial {\cal L}}{\partial x} = 0 ~~ \Rightarrow ~~ \bm{x} = \bm{x}(\bm{y},\bm{V_{yy}},\bm{x_0})$, $\bm{V_{xx}} = \bm{V_{xx}}(\bm{y},\bm{V_{yy}},\bm{x_0})$
+			\item $\bm{x_0}$: bias vector for regularization (taken from MC)\\
+		\end{itemize}
+		
+	\end{columns}
+	
+	\vspace{0.03\textheight}
+	\begin{itemize}
+		\item Регуляризація: накладання обмеження (шляхом додавання $\chi^2$ penalty) на відмінність розв'язку $x$ від $x_0$ (зазвичай МК симуляції), або (краще) його другої похідної (кривини)
+		\item TUnfold підтримує багатовимірні розподіли
+		\item Є декілька методів для підбору ступені регуляризації (regularisation strength)
+		\item $len(x) \le len(y)$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
 	\frametitle{TUnfold (опис зі статті \href{https://www.desy.de/~sschmitt/TUnfold/tunfold\_1205.6201v5.pdf}{JINST 7 (2012) T10003 [arXiv:1205.6201] })}
 	\centering{\includegraphics[width=0.9\textwidth]{pics/scr-alg.png}}
 	\centering{\includegraphics[width=0.9\textwidth]{pics/scr-alg2.png}}
@@ -188,7 +223,7 @@
 \begin{frame}
 	\frametitle{Регуляризація}
 	\begin{itemize}
-		\item Регуляризація призначена для зменшення похибок на розв'язок (variance) ціною зміщення (викривлення) результату (bias)
+		\item Регуляризація призначена для зменшення похибок на розв'язок (variance) ціною зміщення результату (викривлення, bias)
 		\item Ключовою проблемою є знаходження балансу між похибками і зміщенням (bias-variance tradeoff). Це можна розуміти як баланс між статистичною і систематичною похибкою.
 		\item Необхідною умовою є виконання покриття (coverage): наскільки добре розв'язок описує істинний розподіл в межах похибок
 		\item Концепція покриття перевіряється через тести покриття (closure tests, cover tests): використовуючи МК симуляцію (коли відомий істинний розподіл), на штучних прикладах тестують розв'язок, наскільки добре він відтворює істинний розподіл. На основі цих тестів оптимізують розгортання (обирають метод та регуляризацію)
@@ -206,12 +241,15 @@
 	\end{itemize}
 	
 	{\footnotesize 
+
 		\vspace{0.05\textheight}
-		Github:\newline \url{https://github.com/zenaiev/hep/blob/main/unfold/unfold.py}
+		 [Python] \url{https://github.com/zenaiev/hep/blob/main/unfold/unfold.py}
+		 
+		 [C++] \url{https://github.com/zenaiev/hep/blob/main/unfold/unfold.cpp}
 		
 		\vspace{0.05\textheight}
 		Google Colab:\newline
-		[under development\dots] %\scalebox{0.98}{\url{https://colab.research.google.com/github/zenaiev/hep/blob/main/unfold/unfold.ipynb}}
+\scalebox{0.98}{\url{https://colab.research.google.com/github/zenaiev/hep/blob/main/unfold/unfold_cpp.ipynb}}
 	}
 \end{frame}
 
