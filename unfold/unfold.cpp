@@ -74,8 +74,8 @@ int main() {
 
     // Draw smearing distribution
     TCanvas* fig = new TCanvas("canvas", "Smearing", 800, 600);
-    TH1F* h_smear_02 = new TH1F("h_smear_02", "Smear for p = 0.2 GeV", 50, 0, 1.5);
-    TH1F* h_smear_2 = new TH1F("h_smear_2", "Smear for p = 2 GeV", 50, 0, 1.5);
+    TH1F* h_smear_02 = new TH1F("h_smear_02", "Smear for p = 0.2 GeV", 50, 0, 3.);
+    TH1F* h_smear_2 = new TH1F("h_smear_2", "Smear for p = 2 GeV", 50, 0, 3.);
 
     for (int i = 0; i < 10000; ++i) {
         h_smear_02->Fill(smear(0.2));
