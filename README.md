@@ -29,6 +29,11 @@
      - [ноубук](https://github.com/zenaiev/hep/tree/main/invmass/invmass_adv.ipynb)
    - 11.10.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/pid/HEP_KNU_PID.pdf)
+   - 25.10.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/unfolding/unfolding.pdf)
+     - [оптимізований Python скрипт invmass_fast.py (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass_fast.py)
+     - головний скрипт [Python](https://github.com/zenaiev/hep/tree/main/unfold/unfold.py) [C++](https://github.com/zenaiev/hep/tree/main/unfold/unfold.cpp)
+     - [ноубук](https://github.com/zenaiev/hep/blob/main/unfold/unfold_cpp.ipynb)
 
  <!--</details>-->
 
@@ -60,4 +65,9 @@ _______________________________
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/pid/HEP_KNU_PID.pdf)
    - 17.10.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/combine/combine.pdf)
+   - 24.10.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/unfolding/unfolding.pdf)
+     - [оптимізований Python скрипт invmass_fast.py (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass_fast.py)
+     - головний скрипт [Python](https://github.com/zenaiev/hep/tree/main/unfold/unfold.py) [C++](https://github.com/zenaiev/hep/tree/main/unfold/unfold.cpp)
+     - [ноубук](https://github.com/zenaiev/hep/blob/main/unfold/unfold_cpp.ipynb)
 <!--</summary>-->
