@@ -34,6 +34,9 @@
      - [оптимізований Python скрипт invmass_fast.py (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass_fast.py)
      - головний скрипт [Python](https://github.com/zenaiev/hep/tree/main/unfold/unfold.py) [C++](https://github.com/zenaiev/hep/tree/main/unfold/unfold.cpp)
      - [ноубук](https://github.com/zenaiev/hep/blob/main/unfold/unfold_cpp.ipynb)
+   - 01.11.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/cms_od_ttbar/cms_od_ttbar.pdf)
+     - [репозиторій з кодом](https://github.com/zenaiev/2011-ttbar) (branch 2024)
 
  <!--</details>-->
 
@@ -70,4 +73,6 @@ _______________________________
      - [оптимізований Python скрипт invmass_fast.py (аналог invmass.py з попередніх занять)](https://github.com/zenaiev/hep/tree/main/invmass/invmass_fast.py)
      - головний скрипт [Python](https://github.com/zenaiev/hep/tree/main/unfold/unfold.py) [C++](https://github.com/zenaiev/hep/tree/main/unfold/unfold.cpp)
      - [ноубук](https://github.com/zenaiev/hep/blob/main/unfold/unfold_cpp.ipynb)
-<!--</summary>-->
+   - 31.10.2024
+     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/cms_od_ttbar/cms_od_ttbar.pdf)
+     - [репозиторій з кодом](https://github.com/zenaiev/2011-ttbar) (branch 2024)<!--</summary>-->
