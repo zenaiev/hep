@@ -1,0 +1,17 @@
+generate p p > t t~ [QCD]
+output tt_mass_scan
+launch
+set ebeam1 6500
+set ebeam2 6500
+set MT 170
+launch
+set MT 172
+launch
+set MT 174
+launch
+set MT 176
+launch
+set MT 178
+launch
+set MT 180
+
