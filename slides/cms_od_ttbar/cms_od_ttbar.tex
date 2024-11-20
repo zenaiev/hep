@@ -211,6 +211,35 @@ docker start -i my_od
 		}
 		\item Далі виконувати інструкції для Analyzer із \newline \url{https://github.com/zenaiev/2011-ttbar} \newline і запустити Analyzer для одного файлу з даними і МК
 	\end{itemize}
+
+		\vspace{0.2\textheight}
+		\resizebox{\textwidth}{!}{%
+	\begin{tabular}{ccccccc}
+		& Analyzer &  & PostAnalyzer&   & PostAnalyzer &  \\
+		AOD [$\sim 100$ TB] & $\to$ & ntuples [3 GB] & $\to$ &  histograms [$\sim$ MB] & $\to$ &  plots
+	\end{tabular}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Практичне завдання: обробка CMS AOD даних за 2011 рік [PostAnalyzer]}
+
+	\begin{itemize}
+	\item Завантажити ROOT нтуплі (що створені Analyzer, 2.8 ГБ)
+	\url{https://cernbox.cern.ch/s/UmbXF1XxVrT4whQ}
+	\item Перемістити їх (або посилання на них) в директорії PostAnalyzer:
+	\begin{minted}{c++}
+		cd PostAnalyzer
+		ln -s DOWNLOAD/ntuples-data ./
+		ln -s DOWNLOAD/ntuples-mc ./
+	\end{minted}
+	\item Bиконувати інструкції для PostAnalyzer із \newline \url{https://github.com/zenaiev/2011-ttbar}
+	\begin{minted}{c++}
+		cd PostAnalyzer
+		./ttbarMakeHist
+		./ttbarMakePlots
+	\end{minted}
+\end{itemize}
 \end{frame}
 
 %\appendix
