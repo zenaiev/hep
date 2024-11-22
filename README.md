@@ -40,7 +40,7 @@
   - 16.11.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/mg5/mg5_mattelaer_etal.pdf)
      - [мадграф скрипт для скану поперечних перерізів](https://github.com/zenaiev/hep/tree/main/mg5_aMC/tt_scan.txt)
-   - 21.11.2024
+   - 22.11.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/cms_od_ttbar/cms_od_ttbar.pdf)
      - [репозиторій з кодом](https://github.com/zenaiev/2011-ttbar) (branch 2024)
      - [ноубук](https://github.com/zenaiev/hep/blob/main/cms_od_ttbar/cms_od_ttbar_postanalyzer.ipynb)
@@ -86,7 +86,7 @@ _______________________________
   - 16.11.2024
      - [слайди](https://github.com/zenaiev/hep/tree/main/slides/mg5/mg5_mattelaer_etal.pdf)
      - [мадграф скрипт для скану поперечних перерізів](https://github.com/zenaiev/hep/tree/main/mg5_aMC/tt_scan.txt)
-  - 22.11.2024
+  - 21.11.2024
     - [слайди](https://github.com/zenaiev/hep/tree/main/slides/cms_od_ttbar/cms_od_ttbar.pdf)
     - [репозиторій з кодом](https://github.com/zenaiev/2011-ttbar) (branch 2024)
     - [ноубук](https://github.com/zenaiev/hep/blob/main/cms_od_ttbar/cms_od_ttbar_postanalyzer.ipynb)
